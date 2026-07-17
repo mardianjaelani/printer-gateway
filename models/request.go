@@ -1,6 +1,8 @@
 package models
 
-type PrintTextRequest struct {
+type PrintRequest struct {
 	Printer string `json:"printer"`
-	Text    string `json:"text"`
+	Data    string `json:"data"`
+	Job     string `json:"job"`
+	Copies  int    `json:"copies"`
 }
