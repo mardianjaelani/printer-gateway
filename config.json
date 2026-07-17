@@ -1,7 +1,16 @@
 {
-    "port": 8080,
-    "token": "123456789",
-    "queue": true,
-    "log": true,
-    "retry": 3
+    "server": {
+        "port": 8080,
+        "token": "123456789",
+        "queue": true,
+        "log": true,
+        "retry": 3
+    },
+    "cors": {
+        "allow_origins": [
+            "http://localhost:3002",
+            "http://localhost:5173",
+            "http://127.0.0.1:3002"
+        ]
+    }
 }

@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
+	"print-gateway/config"
 	"print-gateway/handlers"
 
 	"github.com/gin-contrib/cors"
@@ -13,12 +15,14 @@ import (
 func main() {
 
 	r := gin.Default()
+	cfg, err := config.Load()
+	if err != nil {
+		panic(err)
+	}
 
 	// CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins: []string{
-			"http://localhost:3002",
-		},
+		AllowOrigins: cfg.Cors.AllowOrigins,
 		AllowMethods: []string{
 			"GET",
 			"POST",
@@ -46,5 +50,5 @@ func main() {
 	printHandler := handlers.NewPrintHandler()
 	r.POST("/api/print", printHandler.Print)
 
-	r.Run(":8080")
+	r.Run(fmt.Sprintf(":%d", cfg.Server.Port))
 }
