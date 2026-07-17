@@ -1,0 +1,7 @@
+{
+    "port": 8080,
+    "token": "123456789",
+    "queue": true,
+    "log": true,
+    "retry": 3
+}
