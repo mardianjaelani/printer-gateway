@@ -14,5 +14,8 @@
             "http://36.64.144.66:1450",
             "http://localhost:8445"
         ]
+    },
+    "sumatra": {
+        "path": "C:\\PrintGateway\\SumatraPDF.exe"
     }
 }

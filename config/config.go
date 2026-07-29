@@ -14,6 +14,10 @@ type Config struct {
 	Cors struct {
 		AllowOrigins []string `json:"allow_origins"`
 	} `json:"cors"`
+
+	Sumatra struct {
+		Path string `json:"path"`
+	} `json:"sumatra"`
 }
 
 func Load() (*Config, error) {

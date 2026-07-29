@@ -49,6 +49,7 @@ func main() {
 
 	printHandler := handlers.NewPrintHandler()
 	r.POST("/api/print", printHandler.Print)
+	r.POST("/api/printPdf", printHandler.PrintPdf)
 
 	r.Run(fmt.Sprintf(":%d", cfg.Server.Port))
 }
