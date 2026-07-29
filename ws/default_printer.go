@@ -1,15 +1,22 @@
 package ws
 
-import "print-gateway/printer"
+import (
+	"os/exec"
+)
 
-func (c *Client) DefaultPrinter() {
+func GetDefaultPrinter() (string, error) {
 
-	p := printer.GetDefaultPrinter()
+	cmd := exec.Command(
+		"powershell",
+		"-Command",
+		"(Get-CimInstance Win32_Printer -Filter 'Default=True').Name",
+	)
 
-	c.Send(Response{
-		Success: true,
-		Action:  "defaultPrinter",
-		Data:    p,
-	})
+	out, err := cmd.Output()
 
+	if err != nil {
+		return "", err
+	}
+
+	return string(out), nil
 }

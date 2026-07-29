@@ -42,8 +42,8 @@ func (c *Client) ReadPump() {
 		case "status":
 			c.Status()
 
-		case "printers":
-			c.Printers()
+		// case "printers":
+		// 	c.ListPrinters()
 
 		case "defaultPrinter":
 			c.DefaultPrinter()
