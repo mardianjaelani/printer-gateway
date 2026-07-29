@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"os/exec"
 
 	"print-gateway/models"
 
@@ -28,4 +29,28 @@ func GetPrinters(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, printers)
+}
+
+func GetPrinterConfig(c *gin.Context) {
+
+	cmd := exec.Command(
+		"powershell",
+		"-Command",
+		"Get-PrintConfiguration -PrinterName ((Get-Printer | Where Default).Name) | ConvertTo-Json",
+	)
+
+	out, err := cmd.Output()
+
+	if err != nil {
+		c.JSON(500, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.Data(
+		200,
+		"application/json",
+		out,
+	)
 }
