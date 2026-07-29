@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 )
 
 type Config struct {
@@ -17,7 +18,19 @@ type Config struct {
 
 func Load() (*Config, error) {
 
-	file, err := os.Open("config.json")
+	// Ambil lokasi file .exe
+	exePath, err := os.Executable()
+	if err != nil {
+		return nil, err
+	}
+
+	// Folder tempat .exe berada
+	exeDir := filepath.Dir(exePath)
+
+	// Path config.json
+	configPath := filepath.Join(exeDir, "config.json")
+
+	file, err := os.Open(configPath)
 	if err != nil {
 		return nil, err
 	}
@@ -26,6 +39,9 @@ func Load() (*Config, error) {
 	cfg := &Config{}
 
 	err = json.NewDecoder(file).Decode(cfg)
+	if err != nil {
+		return nil, err
+	}
 
-	return cfg, err
+	return cfg, nil
 }
