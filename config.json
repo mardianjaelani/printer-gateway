@@ -1,6 +1,6 @@
 {
     "server": {
-        "port": 8080,
+        "port": 8432,
         "token": "123456789",
         "queue": true,
         "log": true,
