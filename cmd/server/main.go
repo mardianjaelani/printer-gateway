@@ -7,6 +7,7 @@ import (
 
 	"print-gateway/config"
 	"print-gateway/handlers"
+	"print-gateway/ws"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -39,6 +40,16 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
+	// ==========================
+	// WebSocket Hub
+	// ==========================
+	hub := ws.NewHub()
+	go hub.Run()
+
+	// ==========================
+	// HTTP API
+	// ==========================
+
 	r.GET("/api/status", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status": "online",
@@ -50,6 +61,15 @@ func main() {
 	printHandler := handlers.NewPrintHandler()
 	r.POST("/api/print", printHandler.Print)
 	r.POST("/api/printPdf", printHandler.PrintPdf)
+
+	// ==========================
+	// WebSocket
+	// ==========================
+	r.GET("/ws", handlers.HandleWS(hub))
+
+	// ==========================
+	// Run Server
+	// ==========================
 
 	r.Run(fmt.Sprintf(":%d", cfg.Server.Port))
 }
