@@ -21,23 +21,28 @@ var upgrader = gws.Upgrader{
 }
 
 func HandleWS(hub *ws.Hub) gin.HandlerFunc {
-
 	return func(c *gin.Context) {
+
+		log.Println("Incoming WS Request")
 
 		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 		if err != nil {
-			log.Println("WebSocket Upgrade Error:", err)
+			log.Println("Upgrade Error:", err)
 			return
 		}
+
+		log.Println("Upgrade Success")
 
 		client := &ws.Client{
 			Conn: conn,
 			Hub:  hub,
 		}
 
+		log.Println("Register Client")
+
 		hub.Register <- client
 
-		log.Printf("Client Connected : %s", conn.RemoteAddr())
+		log.Println("Start ReadPump")
 
 		go client.ReadPump()
 	}

@@ -7,7 +7,7 @@ import (
 
 	"print-gateway/config"
 	"print-gateway/handlers"
-	"print-gateway/ws"
+	"print-gateway/middleware"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -16,6 +16,7 @@ import (
 func main() {
 
 	r := gin.Default()
+	r.Use(middleware.PrivateNetwork())
 	cfg, err := config.Load()
 	if err != nil {
 		panic(err)
@@ -43,8 +44,8 @@ func main() {
 	// ==========================
 	// WebSocket Hub
 	// ==========================
-	hub := ws.NewHub()
-	go hub.Run()
+	// hub := ws.NewHub()
+	// go hub.Run()
 
 	// ==========================
 	// HTTP API
@@ -64,7 +65,7 @@ func main() {
 	// ==========================
 	// WebSocket
 	// ==========================
-	r.GET("/ws", handlers.HandleWS(hub))
+	// r.GET("/ws", handlers.HandleWS(hub))
 
 	// ==========================
 	// Run Server
