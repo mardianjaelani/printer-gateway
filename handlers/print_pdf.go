@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 
 	"print-gateway/models"
@@ -9,6 +10,9 @@ import (
 )
 
 func (h *PrintHandler) PrintPdf(c *gin.Context) {
+	log.Println("===== PrintPdf =====")
+	log.Println("Origin:", c.GetHeader("Origin"))
+	log.Println("RemoteAddr:", c.Request.RemoteAddr)
 
 	var req models.PrintPdfRequest
 
