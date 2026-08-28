@@ -15,7 +15,8 @@
             "http://36.64.144.66:1450",
             "http://localhost:8445",
             "http://10.65.65.24:3002",
-            "https://viva.kencana.org"
+            "https://viva.kencana.org",
+            "https://103.215.228.133:1334"
         ]
     },
     "sumatra": {
