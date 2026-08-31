@@ -90,15 +90,15 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 			fmt.Println("PRINT PDF")
 			fmt.Println("Printer : DEFAULT WINDOWS")
 			fmt.Println("Copy    :", i+1)
+			fmt.Println("Scale   : NONE")
 			fmt.Println("================================")
 
-			// Gunakan default printer Windows
-			// Tidak menentukan paper size
-			// Tidak menentukan scaling
 			cmd = exec.Command(
 				cfg.Sumatra.Path,
 				"-silent",
 				"-print-to-default",
+				"-print-settings",
+				"noscale",
 				pdfPath,
 			)
 
@@ -108,15 +108,16 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 			fmt.Println("PRINT PDF")
 			fmt.Println("Printer :", req.Printer)
 			fmt.Println("Copy    :", i+1)
+			fmt.Println("Scale   : NONE")
 			fmt.Println("================================")
 
-			// Gunakan printer yang dipilih Windows
-			// Paper size mengikuti printer driver
 			cmd = exec.Command(
 				cfg.Sumatra.Path,
 				"-silent",
 				"-print-to",
 				req.Printer,
+				"-print-settings",
+				"noscale",
 				pdfPath,
 			)
 		}
