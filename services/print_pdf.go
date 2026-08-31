@@ -98,7 +98,7 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 				"-silent",
 				"-print-to-default",
 				"-print-settings",
-				"noscale,paper=auto",
+				"noscale",
 				pdfPath,
 			)
 
@@ -117,7 +117,7 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 				"-print-to",
 				req.Printer,
 				"-print-settings",
-				"noscale,paper=auto",
+				"noscale",
 				pdfPath,
 			)
 		}
