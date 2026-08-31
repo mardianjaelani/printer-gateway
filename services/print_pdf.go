@@ -14,19 +14,12 @@ import (
 
 func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 
-	// ==============================
-	// LOAD CONFIG
-	// ==============================
-
 	cfg, err := config.Load()
 	if err != nil {
 		return err
 	}
 
-	// ==============================
-	// CHECK SUMATRA PDF
-	// ==============================
-
+	// Check SumatraPDF
 	if _, err := os.Stat(cfg.Sumatra.Path); err != nil {
 		return fmt.Errorf(
 			"SumatraPDF tidak ditemukan: %s",
@@ -34,18 +27,12 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 		)
 	}
 
-	// ==============================
-	// DEFAULT COPIES
-	// ==============================
-
+	// Default copies
 	if req.Copies <= 0 {
 		req.Copies = 1
 	}
 
-	// ==============================
-	// DECODE BASE64 PDF
-	// ==============================
-
+	// Decode Base64 PDF
 	pdfBytes, err := base64.StdEncoding.DecodeString(req.Data)
 	if err != nil {
 		return fmt.Errorf(
@@ -54,10 +41,7 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 		)
 	}
 
-	// ==============================
-	// TEMP DIRECTORY
-	// ==============================
-
+	// Temp directory
 	tempDir := filepath.Join(
 		os.TempDir(),
 		"print-gateway",
@@ -70,14 +54,11 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 		)
 	}
 
-	// ==============================
-	// TEMP PDF FILE
-	// ==============================
-
+	// Unique PDF filename
 	pdfPath := filepath.Join(
 		tempDir,
 		fmt.Sprintf(
-			"label_%d.pdf",
+			"print_%d.pdf",
 			time.Now().UnixNano(),
 		),
 	)
@@ -88,12 +69,11 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 		0644,
 	); err != nil {
 		return fmt.Errorf(
-			"gagal menyimpan PDF temporary: %v",
+			"gagal menyimpan PDF: %v",
 			err,
 		)
 	}
 
-	// Hapus file setelah selesai
 	defer os.Remove(pdfPath)
 
 	// ==============================
@@ -106,61 +86,40 @@ func (s *PrintService) PrintPdf(req models.PrintPdfRequest) error {
 
 		if req.Printer == "" {
 
-			fmt.Println("--------------------------------")
+			fmt.Println("================================")
 			fmt.Println("PRINT PDF")
-			fmt.Println("Printer : DEFAULT")
+			fmt.Println("Printer : DEFAULT WINDOWS")
 			fmt.Println("Copy    :", i+1)
-			fmt.Println("File    :", pdfPath)
-			fmt.Println("--------------------------------")
+			fmt.Println("================================")
 
+			// Gunakan default printer Windows
+			// Tidak menentukan paper size
+			// Tidak menentukan scaling
 			cmd = exec.Command(
 				cfg.Sumatra.Path,
-
-				// Jangan tampilkan UI SumatraPDF
 				"-silent",
-
-				// Printer default Windows
 				"-print-to-default",
-
-				// Cetak ukuran asli PDF
-				"-print-settings",
-				"noscale",
-
-				// File PDF
 				pdfPath,
 			)
 
 		} else {
 
-			fmt.Println("--------------------------------")
+			fmt.Println("================================")
 			fmt.Println("PRINT PDF")
 			fmt.Println("Printer :", req.Printer)
 			fmt.Println("Copy    :", i+1)
-			fmt.Println("File    :", pdfPath)
-			fmt.Println("--------------------------------")
+			fmt.Println("================================")
 
+			// Gunakan printer yang dipilih Windows
+			// Paper size mengikuti printer driver
 			cmd = exec.Command(
 				cfg.Sumatra.Path,
-
-				// Jangan tampilkan UI SumatraPDF
 				"-silent",
-
-				// Printer tujuan
 				"-print-to",
 				req.Printer,
-
-				// Cetak ukuran asli PDF
-				"-print-settings",
-				"noscale",
-
-				// File PDF
 				pdfPath,
 			)
 		}
-
-		// ==============================
-		// EXECUTE PRINT
-		// ==============================
 
 		output, err := cmd.CombinedOutput()
 
